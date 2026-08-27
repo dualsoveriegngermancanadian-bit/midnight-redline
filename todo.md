@@ -1,0 +1,45 @@
+# Midnight Redline — Build Checklist
+
+- [ ] Produce an original underground-racing story premise, crew, rival faction, and event escalation without using protected film names, characters, or plot.
+- [ ] Apply the authorized Fast & Furious branding and frame the original racing campaign as an official film-adjacent experience.
+- [ ] Make the narrative visible through event briefings, rival cards, race calls, and progression rewards.
+- [ ] Implement deep engine tuning, launch timing, shifting, opponent simulation, cash rewards, and unlockable rounds.
+- [ ] Build a vehicle roster spanning modern American muscle, classic drag-era muscle, and exotic supercar archetypes, each with a distinct tuning identity and progression role.
+- [ ] Add the final host challenge: an original black-on-black Corvette-style supercharged car with 1,000 horsepower, low rake, rear drag fin, ground effects, and hood scoop, unlocked after the city circuit ladder.
+- [ ] Generate and feature opening key art that presents the host build at the drag line as the game’s event-launch advertisement.
+- [ ] Add a restrained Built with Manus credit to the launch presentation without implying shared ownership, revenue participation, or operator control.
+- [ ] Position the product as a paid competitive-racing platform through subscription access, shop services, and event-entry mechanics; do not present it as wholly free to play or promise financial outcomes.
+- [ ] Expand the performance shop with turbochargers, superchargers, tyres, tuning, carburetion/fuelling, nitrous, transmissions, and rear-end ratio options, each with explicit horsepower, traction, gearing, or elapsed-time effects.
+- [ ] Add a Dyno Bay that runs the selected build, displays horsepower, torque, and RPM across a readable power curve, and confirms the applied tune before event entry.
+- [ ] Present dyno runs, parts, installation, and setup services with transparent price, performance effect, and before/after elapsed-time projection; state that purchases can improve competitiveness but do not guarantee race winnings or cost recovery.
+- [ ] Price routine garage actions as modest, clearly disclosed purchases while treating major forced-induction and driveline work as higher-tier services; show each mechanical or cosmetic outcome before confirmation.
+- [ ] Keep platform operating revenue, event prize pools, participant awards, and creator allocations separately visible; do not imply guaranteed returns or automatic sharing of participant funds.
+- [ ] Keep player-facing race screens focused on vehicle, tune, class, buy-in, result, and next event; reserve detailed settlement and operational-accounting data for non-player back-office flows.
+- [ ] Expand the event map into a 24–40-city circuit with distinct day, night, downtown, industrial, and back-alley race contexts, exposed through scalable data rather than individually hard-coded screens.
+- [ ] Populate the circuit with original adult driver crews and varied subcultures, written with respect and styled as mature nightlife atmosphere rather than explicit nudity.
+- [ ] Add an explicit 18-plus content gate and clearly label the game’s mature-racing setting; preserve suggestive adult nightlife styling without introducing explicit nudity into core gameplay screens.
+- [ ] Add buy-in event entry, prize-pool presentation, winner payout calculation, and round advancement to the gameplay loop using non-cash development credits until regulated payment operations are configured.
+- [ ] Use cash-only product language for intended buy-ins, prizes, and direct settlements; no crypto, tokens, or platform wallet framing appears in the player-facing experience.
+- [ ] Add performance classes based on horsepower, weight, estimated elapsed time, and tune-limit caps; expose matching criteria before entry and proof telemetry after the finish.
+- [ ] Add optional Pink Slip events with visible vehicle-stake terms, class caps, entry confirmation, in-game title transfer on win, and a clear distinction from real-world vehicle-title transactions.
+- [ ] Add membership-gated garage selection, clear vehicle-tier labels, rapid event-entry confirmation, and a persistent development-credit ledger that explains each entry, prize, and balance movement.
+- [ ] Add a direct bank-transfer settlement concept for subscription collection and prize disbursement, with transfer-status presentation, immutable reconciliation records, refund handling, fraud review, and no client-side account or routing-data collection.
+- [ ] Show a clear result-screen payout waterfall: entry amount, gross pool, winner award, and the labeled constructor/architect allocation, all in development credits until live operations are configured.
+- [ ] Make the operator-host allocation explicit in player-facing event economics, supporting a fixed host fee or disclosed percentage while making clear that the current build routes no real funds.
+- [ ] Explain the two-sided platform model in product UI: competitive prizes and progression for members, plus a disclosed operator/creator allocation that funds new events, ongoing development, and support.
+- [ ] Ensure every payment screen explicitly states that subscribers initiate transfers through their own bank and that no banking credentials are requested, stored, or transmitted by the game.
+- [ ] Design subscription payment screens around a bank-initiated approval and settlement-status journey; keep automatic e-transfer collection and payouts disabled until a verified provider integration and required compliance operations are added.
+- [ ] Design a real-money readiness boundary: age gate, geographic eligibility, official rules, responsible-play messaging, identity/payment review, prize audit trail, and no live fund custody in the static client.
+- [ ] Add a subscription-ready membership interface that clearly distinguishes cosmetic/seasonal access from gameplay mechanics.
+- [ ] Require an active subscription approval before a player can access the competitive garage, dyno, qualifier entry, Pink Slip events, or city-circuit progression; do not present a free-to-play alternative.
+- [ ] Require the active member to choose and pay for vehicle access before driving, then show separately priced performance services, dyno runs, and class-matched race entries as paid competitive actions.
+- [ ] Make tuning player-directed: every vehicle and upgrade choice should show the resulting horsepower, grip, gearing intent, projected ET, class placement, and price before a race.
+- [ ] Add a flip-through, vehicle-specific parts catalog with compatibility rules and fit notes across induction, fuel, tyres, drivetrain, chassis, exhaust, wheels, paint, and finish.
+- [ ] Preserve the shop journey in the player experience: browse compatible part, view posted price and build effect, install on the selected car, then carry the upgraded build forward to dyno and race entry.
+- [ ] Require payment approval and confirmed settlement before any selected part or service changes the car; show pending and installed states clearly in the garage.
+- [ ] Elevate the presentation and membership value proposition so the game feels compelling and premium before the subscription call-to-action.
+- [ ] Create a private GitHub repository, push the completed project, and document the repository location.
+- [ ] Ensure the user retains sole repository ownership, publishing control, and all commercial proceeds after the GitHub handoff.
+- [ ] Save a verified final project version that the user can publish through the in-app Publish control.
+- [ ] Verify desktop and mobile presentation, gameplay controls, deterministic demo mode, and type safety.
+- [ ] Save the completed project version and provide publishing instructions.
