@@ -71,3 +71,8 @@ Player award and prize disbursement flows are deliberately separated from ordina
 ## Preconditions for Live Activation
 
 Live collection remains off until the creator approves the entire price table, connects the Stripe account, supplies secure server-side Stripe credentials, creates the Product and Price records, configures a production webhook endpoint, completes Stripe business/tax/bank onboarding, and tests the entitlement workflow in Stripe test mode. The game must never grant paid access merely because the browser has clicked a checkout button.
+
+
+## Receiving Bank Decision
+
+The primary receiving institution for the direct-bank payment path is **RBC Royal Bank**, using the creator’s existing sole-proprietorship business relationship. Scotiabank remains an alternative institution but is not the primary settlement path. The creator’s legal name, Gmail address, business number, licensing records, account numbers, and login credentials remain confined to the secure bank or payment-provider onboarding flow and are not stored in this repository.
