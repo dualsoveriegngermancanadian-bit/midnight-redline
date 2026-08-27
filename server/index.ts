@@ -2,7 +2,7 @@ import express from "express";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
-import Stripe from "stripe";
+import { randomUUID } from "crypto";
 import {
   COMMERCE_PRODUCTS,
   findCommerceProducts,
@@ -11,84 +11,57 @@ import {
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const rbcBusinessPaymentsEnabled = process.env.RBC_BUSINESS_PAYMENTS_ENABLED === "true";
+const rbcReconciliationSecret = process.env.RBC_RECONCILIATION_SECRET;
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-const stripe = stripeSecretKey ? new Stripe(stripeSecretKey) : null;
+type OrderStatus = "awaiting_bank_confirmation" | "confirmed" | "expired" | "refunded" | "renewal_required";
+type PendingOrder = {
+  productIds: string[];
+  amountCents: number;
+  createdAt: string;
+  status: OrderStatus;
+  bankTransactionReference?: string;
+};
 
-function checkoutIsConfigured() {
-  return Boolean(stripe);
-}
+// Production deployments should replace this with durable storage plus the bank's verified callback/API.
+const pendingBankOrders = new Map<string, PendingOrder>();
 
 function publicOrigin(req: express.Request) {
   const configuredOrigin = process.env.PUBLIC_APP_URL?.replace(/\/$/, "");
-  if (configuredOrigin) return configuredOrigin;
-  return `${req.protocol}://${req.get("host")}`;
+  return configuredOrigin || `${req.protocol}://${req.get("host")}`;
 }
 
 async function startServer() {
   const app = express();
   const server = createServer(app);
-
-  // Stripe must receive the untouched raw body so it can verify event signatures.
-  app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), (req, res) => {
-    if (!stripe || !stripeWebhookSecret) {
-      res.status(503).json({ error: "Stripe webhooks are not configured." });
-      return;
-    }
-
-    const signature = req.headers["stripe-signature"];
-    if (typeof signature !== "string") {
-      res.status(400).json({ error: "Missing Stripe signature." });
-      return;
-    }
-
-    let event: Stripe.Event;
-    try {
-      event = stripe.webhooks.constructEvent(req.body, signature, stripeWebhookSecret);
-    } catch (error) {
-      res.status(400).json({ error: "Invalid Stripe signature." });
-      return;
-    }
-
-    // A production deployment persists idempotency keys and entitlements in its database.
-    // This repository intentionally never grants access based on a browser redirect alone.
-    if (
-      event.type === "checkout.session.completed" ||
-      event.type === "invoice.paid" ||
-      event.type === "customer.subscription.updated" ||
-      event.type === "customer.subscription.deleted"
-    ) {
-      console.info("Verified Stripe commerce event", { id: event.id, type: event.type });
-    }
-
-    res.json({ received: true });
-  });
-
   app.use(express.json({ limit: "20kb" }));
 
   app.get("/api/commerce/catalog", (_req, res) => {
     res.json({
-      currency: "usd",
-      checkoutEnabled: checkoutIsConfigured(),
+      currency: "cad",
+      paymentRail: "rbc_business_request_money",
+      checkoutEnabled: rbcBusinessPaymentsEnabled,
       products: COMMERCE_PRODUCTS.map(({ sourceGameValue: _sourceGameValue, ...product }) => product),
     });
   });
 
   app.get("/api/commerce/status", (_req, res) => {
     res.json({
-      checkoutEnabled: checkoutIsConfigured(),
-      webhooksConfigured: Boolean(stripe && stripeWebhookSecret),
-      message: checkoutIsConfigured()
-        ? "Stripe checkout is configured. Entitlements must be granted by verified webhook events."
-        : "Stripe checkout is not configured. Add server-side Stripe credentials only after catalog approval.",
+      paymentRail: "rbc_business_request_money",
+      bank: "RBC Royal Bank",
+      paymentEnabled: rbcBusinessPaymentsEnabled,
+      creatorPayoutCadence: "weekly",
+      message: rbcBusinessPaymentsEnabled
+        ? "RBC business payment requests are enabled. Entitlements require verified bank confirmation."
+        : "RBC business payment requests are not enabled. Complete RBC business enrollment before collecting money.",
     });
   });
 
-  app.post("/api/commerce/checkout", async (req, res) => {
-    if (!stripe) {
+  app.post("/api/commerce/rbc-request", (req, res) => {
+    if (!rbcBusinessPaymentsEnabled) {
       res.status(503).json({
-        error: "Stripe checkout is not configured. No payment can be collected until the creator connects Stripe and configures server-side credentials.",
+        error: "RBC business payment requests are not enabled. No payment was requested or collected.",
+        paymentRail: "rbc_business_request_money",
       });
       return;
     }
@@ -97,78 +70,87 @@ async function startServer() {
       ? req.body.productIds.filter((id: unknown): id is string => typeof id === "string")
       : [];
     const products = findCommerceProducts(productIds);
-
     if (!products || !isValidCheckoutCart(products)) {
-      res.status(400).json({
-        error: "Invalid catalog selection. Select one lineup subscription or a cart of one-time products.",
-      });
+      res.status(400).json({ error: "Invalid catalog selection. Select one lineup subscription or a cart of one-time products." });
       return;
     }
 
-    const prices = await stripe.prices.list({
-      lookup_keys: products.map((product) => product.lookupKey),
-      active: true,
-      limit: products.length,
+    const amountCents = products.reduce((total, product) => total + (product.amountCents ?? 0), 0);
+    const orderReference = `MR-${new Date().toISOString().slice(0, 10).replaceAll("-", "")}-${randomUUID().slice(0, 8).toUpperCase()}`;
+    pendingBankOrders.set(orderReference, {
+      productIds: products.map((product) => product.id),
+      amountCents,
+      createdAt: new Date().toISOString(),
+      status: "awaiting_bank_confirmation",
     });
-    const pricesByLookupKey = new Map(prices.data.map((price) => [price.lookup_key, price]));
-    const missingPrice = products.find((product) => !pricesByLookupKey.has(product.lookupKey));
 
-    if (missingPrice) {
-      res.status(503).json({
-        error: `The Stripe price for ${missingPrice.name} has not been configured yet.`,
-      });
+    res.status(202).json({
+      orderReference,
+      paymentRail: "rbc_business_request_money",
+      bank: "RBC Royal Bank",
+      currency: "cad",
+      amountCents,
+      status: "awaiting_bank_confirmation",
+      paymentRequestUrl: null,
+      message: "Order reference created. Complete the RBC Business Request Money flow; access is granted only after verified confirmation.",
+      nextStep: `Use order reference ${orderReference} in the RBC business payment request.`,
+      origin: publicOrigin(req),
+    });
+  });
+
+  app.get("/api/commerce/rbc-order/:orderReference", (req, res) => {
+    const order = pendingBankOrders.get(req.params.orderReference);
+    if (!order) {
+      res.status(404).json({ error: "Order reference not found." });
+      return;
+    }
+    res.json({
+      orderReference: req.params.orderReference,
+      status: order.status,
+      amountCents: order.amountCents,
+      paymentRail: "rbc_business_request_money",
+    });
+  });
+
+  app.post("/api/internal/rbc/reconcile", (req, res) => {
+    if (!rbcReconciliationSecret || req.headers["x-rbc-reconciliation-secret"] !== rbcReconciliationSecret) {
+      res.status(401).json({ error: "RBC reconciliation authorization required." });
       return;
     }
 
-    const subscription = products[0].billingMode === "subscription";
-    const origin = publicOrigin(req);
-
-    try {
-      const checkout = await stripe.checkout.sessions.create({
-        mode: subscription ? "subscription" : "payment",
-        line_items: products.map((product) => ({
-          price: pricesByLookupKey.get(product.lookupKey)!.id,
-          quantity: 1,
-        })),
-        success_url: `${origin}/?stripe=success&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${origin}/?stripe=cancelled`,
-        allow_promotion_codes: true,
-        automatic_tax: { enabled: process.env.STRIPE_AUTOMATIC_TAX === "true" },
-        metadata: {
-          product_ids: products.map((product) => product.id).join(","),
-          entitlement_source: "verified_stripe_webhook_required",
-        },
-      });
-
-      if (!checkout.url) {
-        res.status(500).json({ error: "Stripe did not return a checkout URL." });
-        return;
-      }
-
-      res.json({ url: checkout.url });
-    } catch (error) {
-      console.error("Stripe Checkout Session creation failed", error);
-      res.status(502).json({ error: "Stripe could not start checkout. No payment was collected." });
+    const orderReference = typeof req.body?.orderReference === "string" ? req.body.orderReference : "";
+    const bankTransactionReference = typeof req.body?.bankTransactionReference === "string" ? req.body.bankTransactionReference : "";
+    const outcome = req.body?.outcome as OrderStatus;
+    const order = pendingBankOrders.get(orderReference);
+    if (!order || !bankTransactionReference || !["confirmed", "expired", "refunded", "renewal_required"].includes(outcome)) {
+      res.status(400).json({ error: "Invalid reconciliation record." });
+      return;
     }
+    if (outcome === "confirmed" && typeof req.body?.amountCents !== "number" || outcome === "confirmed" && req.body.amountCents !== order.amountCents) {
+      res.status(409).json({ error: "Confirmed bank amount does not match the order amount." });
+      return;
+    }
+
+    const alreadyUsed = Array.from(pendingBankOrders.values()).some((candidate) => candidate.bankTransactionReference === bankTransactionReference && candidate !== order);
+    if (alreadyUsed) {
+      res.status(409).json({ error: "Bank transaction reference has already been reconciled." });
+      return;
+    }
+
+    order.status = outcome;
+    order.bankTransactionReference = bankTransactionReference;
+    res.json({ orderReference, status: order.status, entitlementReady: order.status === "confirmed" });
   });
 
-  // Serve static files from dist/public in production
-  const staticPath =
-    process.env.NODE_ENV === "production"
-      ? path.resolve(__dirname, "public")
-      : path.resolve(__dirname, "..", "dist", "public");
-
+  // Static files from dist/public in production.
+  const staticPath = process.env.NODE_ENV === "production"
+    ? path.resolve(__dirname, "public")
+    : path.resolve(__dirname, "..", "dist", "public");
   app.use(express.static(staticPath));
-
-  // Handle client-side routing - serve index.html for all routes
-  app.get("*", (_req, res) => {
-    res.sendFile(path.join(staticPath, "index.html"));
-  });
+  app.get("*", (_req, res) => res.sendFile(path.join(staticPath, "index.html")));
 
   const port = process.env.PORT || 3000;
-  server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
-  });
+  server.listen(port, () => console.log(`Server running on http://localhost:${port}/`));
 }
 
 startServer().catch(console.error);

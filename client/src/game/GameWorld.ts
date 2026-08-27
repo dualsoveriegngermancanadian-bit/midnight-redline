@@ -35,7 +35,7 @@ export class GameWorld {
   private hudTick = 0;
   private pinkSlip = false;
   /**
-   * Production access can only be granted by a server-side verified Stripe event.
+   * Production access can only be granted by a server-side verified bank-payment confirmation.
    * The local demo flag remains available solely for deterministic visual testing.
    */
   private verifiedLineupAccess = false;
@@ -165,7 +165,7 @@ export class GameWorld {
   }
 
   /**
-   * Future server integration calls this only after verifying Stripe webhook data
+   * Future server integration calls this only after verifying the bank-payment confirmation data
    * and loading the entitlement record for the authenticated player.
    */
   applyVerifiedCommerceEntitlements({ lineupActive, raceEntryActive }: { lineupActive: boolean; raceEntryActive: boolean }) {

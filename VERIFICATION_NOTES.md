@@ -1,19 +1,21 @@
 # Verification Notes
 
-## 2026-08-27 — Commercial Interface Check
+## 2026-08-27 — Commercial Interface and RBC Payment Boundary
 
-The production build loaded successfully at `/?demo` and the core Babylon race scene rendered with the HUD, race controls, timing tree, player vehicle, and rival vehicle visible. In deterministic demo mode, the simulation immediately entered the staging/countdown/race sequence. Selecting the Nitro Pass control during the active race did not open the commercial panel because the existing overlay intentionally hides all pit-sheet panels while a race is active. The next visual check must wait for a result state or use a non-demo session so the new lineup-subscription and cart panel can be reviewed.
+The production build loaded successfully at `/?demo` and the core Babylon race scene rendered with the HUD, race controls, timing tree, player vehicle, and rival vehicle visible. The commercial pit-sheet displays the six lineup terms ($40, $45, $55, $65, $75, and $80), the $25 one-event access card, the 13-item parts/services/cosmetics catalog, the cart summary, and weekly creator-settlement messaging. The pit-sheet uses a constrained scrollable layout so the complete catalog remains accessible without clipping the race surface.
 
-No payment attempt was made during this verification. The server continues to require Stripe configuration before it can create a checkout session.
+The approved payment path is RBC business e-transfer. The client sends a server-validated catalog selection to the RBC business-payment request boundary. The server creates a unique order reference and records the CAD amount with `awaiting_bank_confirmation` status. No paid access is granted from a button click, a browser redirect, a screenshot, or an unverified customer claim.
 
-A fresh non-demo session successfully displayed the commercial pit-sheet after the launch gate was dismissed. The visible catalog includes all six lineup terms ($40, $45, $55, $65, $75, and $80), the $25 one-event access card, the 13-item parts/services/cosmetics catalog, cart summary, and weekly creator-payout messaging. The pit-sheet scroll container displays the entire catalogue in a constrained desktop area; the lineup cards are compact at the top of the available panel. No checkout was started, and no payment data was requested.
+The server supports controlled reconciliation outcomes of `confirmed`, `expired`, `refunded`, and `renewal_required`. A confirmed bank transaction must match the order amount and may be reconciled only once. The reconciliation boundary is protected by a server-side secret and is disabled until RBC business-payment enrollment and a verified bank confirmation or reconciliation adapter are configured.
 
-After the commercial-sheet layout adjustment and production-server restart, the commercial interface displayed as a dedicated scrollable pit-sheet on desktop. The visible top section includes the competitive-garage copy, six subscription cards, weekly payout language, the $25 qualifier-access card, and the start of the micro-product grid; the panel’s visible scrollbar confirms that the remainder of the catalog is accessible without clipping the game surface. The production API reported 29 catalog products, with checkout disabled and webhooks disabled because no Stripe credentials are configured.
+No banking credentials, account numbers, security answers, identity documents, or tax identifiers are stored in the game or repository. The customer-facing handoff may use email or phone delivery, while the customer authorizes the payment in their own banking environment. Weekly creator settlement is recorded as the approved cadence; player award and prize disbursements remain separate from ordinary catalog revenue.
 
-## External Stripe References Used
+## Verification status
 
-- https://stripe.com/pricing — U.S. standard pricing lists domestic online card processing at 2.9% + $0.30 per successful transaction; it also lists international-card, currency-conversion, dispute, Stripe Tax, and other variable charges.
-- https://stripe.com/billing/pricing — Stripe Billing pay-as-you-go pricing lists 0.7% of Billing volume and identifies recurring subscriptions, customer portal, and recovery features.
-- https://docs.stripe.com/billing/quickstart — Stripe’s Checkout subscription guide requires server-side price handling and recommends a webhook endpoint before granting access.
-- https://docs.stripe.com/billing/subscriptions/webhooks — Stripe’s subscription documentation confirms webhook handling is required for asynchronous status changes, payment success/failure, and access management.
-- https://docs.stripe.com/connect/direct-charges — Stripe Connect direct-charge guidance was reviewed only for the alternative multi-seller marketplace model; it is not selected for the current single-creator seller model.
+`pnpm check` and `pnpm build` pass after the RBC-only payment boundary and catalog changes. The working project remains non-live until the creator’s RBC business-payment service is enrolled and the production confirmation adapter is configured. No customer payment was collected during testing.
+
+## Official bank references
+
+1. [RBC — Receive Payments from Customers and Others](https://www.rbcroyalbank.com/business/paying-and-receiving/receive-payments.html) — describes business Interac e-Transfer Request Money, invoice references, and business receiving options.
+2. [RBC — Business Banking APIs](https://www.rbcroyalbank.com/business/api/index.html) — describes RBC business API capabilities and directs businesses to their RBC advisor for enrollment and availability.
+3. [Scotiabank — Interac e-Transfer for business](https://www.scotiabank.com/ca/en/business-banking/banking-solutions/payments-and-merchant-services/interac-e-transfer-for-business.html) — retained as a non-primary alternative reference only.

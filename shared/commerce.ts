@@ -8,7 +8,7 @@ export type CommerceProduct = {
   description: string;
   category: CommerceCategory;
   billingMode: BillingMode;
-  /** Displayed price in cents. `null` means the price is configured solely in Stripe before launch. */
+  /** Displayed price in cents. `null` means the price must be configured in the approved business payment system before launch. */
   amountCents: number | null;
   /** Number of calendar months between subscription renewals. */
   intervalMonths?: number;
@@ -79,5 +79,5 @@ export function isValidCheckoutCart(products: CommerceProduct[]) {
 }
 
 export function formatUsd(cents: number | null) {
-  return cents === null ? "PRICED IN STRIPE" : new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cents / 100);
+  return cents === null ? "PRICE PENDING" : new Intl.NumberFormat("en-CA", { style: "currency", currency: "CAD" }).format(cents / 100);
 }

@@ -42,19 +42,20 @@ export default function CommerceSheet({ onDemoActivate }: Props) {
 
   const beginCheckout = async (productIds: string[]) => {
     setCheckoutState("loading");
-    setNotice("Preparing secure Stripe Checkout…");
+    setNotice("Preparing secure RBC business payment request…");
 
     try {
-      const response = await fetch("/api/commerce/checkout", {
+      const response = await fetch("/api/commerce/rbc-request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productIds }),
       });
       const payload = await response.json().catch(() => ({}));
-      if (!response.ok || typeof payload.url !== "string") {
-        throw new Error(payload.error || "Checkout is not available yet.");
+      if (!response.ok || typeof payload.orderReference !== "string") {
+        throw new Error(payload.error || "RBC business payment requests are not available yet.");
       }
-      window.location.assign(payload.url);
+      setCheckoutState("idle");
+      setNotice(`${payload.message || "Complete the RBC business payment request."} Reference: ${payload.orderReference}`);
     } catch (error) {
       setCheckoutState("error");
       setNotice(error instanceof Error ? error.message : "Checkout is not available yet.");
@@ -65,7 +66,7 @@ export default function CommerceSheet({ onDemoActivate }: Props) {
     <div className="sheet-eyebrow">COMPETITIVE GARAGE <span>—</span> PAYABLE CATALOG</div>
     <section className="commerce-intro">
       <div><span>RACE THE FULL LINEUP</span><h2>Choose the garage.<br />Build the car.</h2><p>An active lineup subscription keeps multiple cars race-ready while you tune, qualify, and progress toward The Architect’s final host run.</p></div>
-      <aside><CircleDollarSign size={20} /><b>WEEKLY<br />CREATOR PAYOUTS</b><small>Stripe-hosted checkout. No financial details are collected in-game.</small></aside>
+      <aside><CircleDollarSign size={20} /><b>WEEKLY<br />CREATOR PAYOUTS</b><small>RBC business payment request. No financial details are collected in-game.</small></aside>
     </section>
 
     <div className="commerce-section-title">LINEUP SUBSCRIPTION <small>RECURRING TERM</small></div>
@@ -74,7 +75,7 @@ export default function CommerceSheet({ onDemoActivate }: Props) {
         <span>{plan.intervalMonths} MONTH{plan.intervalMonths === 1 ? "" : "S"}</span><b>{formatUsd(plan.amountCents)}</b><small>RENWS EVERY {plan.intervalMonths} MONTH{plan.intervalMonths === 1 ? "" : "S"}</small><i>{plan.id === selectedPlan.id ? <Check size={14} /> : "SELECT"}</i>
       </button>)}
     </div>
-    <div className="commerce-action-row"><div><b>{selectedPlan.name}</b><span>Active lineup access · garage · dyno · qualifiers · host progression</span></div><button className="primary-button" disabled={checkoutState === "loading"} onClick={() => beginCheckout([selectedPlan.id])}>{checkoutState === "loading" ? "PREPARING…" : `START FOR ${formatUsd(selectedPlan.amountCents)}`} <LockKeyhole size={15} /></button></div>
+    <div className="commerce-action-row"><div><b>{selectedPlan.name}</b><span>Active lineup access · garage · dyno · qualifiers · host progression</span></div><button className="primary-button" disabled={checkoutState === "loading"} onClick={() => beginCheckout([selectedPlan.id])}>{checkoutState === "loading" ? "PREPARING…" : `REQUEST ${formatUsd(selectedPlan.amountCents)}`} <LockKeyhole size={15} /></button></div>
 
     <div className="commerce-section-title">QUALIFIER ACCESS <small>ACTIVE MEMBERS</small></div>
     <div className="race-access-card"><div><span>ONE EVENT ENTRY</span><b>{formatUsd(raceEntry.amountCents)} <small>PER RACE</small></b><p>Every eligible qualifier requires an active lineup subscription and a separately verified entry entitlement.</p></div><button className="minor-button" disabled={checkoutState === "loading"} onClick={() => beginCheckout([raceEntry.id])}>ADD RACE ENTRY</button></div>
@@ -86,7 +87,7 @@ export default function CommerceSheet({ onDemoActivate }: Props) {
         return <button key={product.id} className={`commerce-product ${included ? "in-cart" : ""}`} onClick={() => toggleCart(product)}><span>{product.category.toUpperCase()}</span><b>{product.name}</b><small>{product.description}</small><em>{formatUsd(product.amountCents)}</em><i>{included ? "IN CART" : "ADD"}</i></button>;
       })}
     </div>
-    <div className="cart-checkout"><div><ShoppingCart size={17} /><span><b>{cartProducts.length} ITEM{cartProducts.length === 1 ? "" : "S"} IN CART</b><small>{cartProducts.length ? `One secure checkout · ${formatUsd(cartTotal)} before applicable taxes` : "Select parts, services, or cosmetics to create one checkout."}</small></span></div><button className="primary-button" disabled={!cartProducts.length || checkoutState === "loading"} onClick={() => beginCheckout(cartProductIds)}>CHECK OUT CART <LockKeyhole size={15} /></button></div>
+    <div className="cart-checkout"><div><ShoppingCart size={17} /><span><b>{cartProducts.length} ITEM{cartProducts.length === 1 ? "" : "S"} IN CART</b><small>{cartProducts.length ? `One secure checkout · ${formatUsd(cartTotal)} before applicable taxes` : "Select parts, services, or cosmetics to create one checkout."}</small></span></div><button className="primary-button" disabled={!cartProducts.length || checkoutState === "loading"} onClick={() => beginCheckout(cartProductIds)}>REQUEST PAYMENT <LockKeyhole size={15} /></button></div>
 
     <p className={`commerce-notice ${checkoutState === "error" ? "error" : ""}`}><LockKeyhole size={13} /> {notice}</p>
     {demoMode && <button className="demo-access-button" onClick={onDemoActivate}>DEMO MODE — UNLOCK GARAGE WITHOUT CHECKOUT</button>}
