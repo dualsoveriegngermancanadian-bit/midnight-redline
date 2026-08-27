@@ -4,19 +4,19 @@
 
 ## Core Commercial Model
 
-Midnight Redline is a **paid competitive racing platform**. A player enters the game through a paid **Garage Lineup Subscription**, selects from multiple race-ready cars, pays a separate **$25 event-access charge** for each race entered, and may buy individual micro-products—parts, services, performance work, and cosmetics—to build the selected car. The continuing goal is to progress through the circuit and race **The Architect**, the final host opponent.
+Midnight Redline is a **paid competitive racing platform**. A player enters the game through paid **Garage Lineup Access**, selects from multiple race-ready cars, pays a separate **$25 event-access charge** for each race entered, and may buy individual micro-products—parts, services, performance work, and cosmetics—to build the selected car. The continuing goal is to progress through the circuit and race **The Architect**, the final host opponent.
 
 | Revenue family | Player experience | Billing pattern | Creator settlement |
 |---|---|---|---|
-| Garage Lineup Subscription | Access the active car lineup, garage, dyno, qualifiers, and host progression. | Recurring term subscription. | Confirmed business-payment receipts settle to the creator’s RBC business account and approved weekly settlement ledger. |
-| Race Entry | Pay to enter an eligible race as an active subscriber. | $25 one-time event-access payment per entry. | Standard product receipt. Player prizes remain separately controlled. |
+| Garage Lineup Access | Access the active car lineup, garage, dyno, qualifiers, and host progression. | One-time prepaid term. | Confirmed business-payment receipts settle to the creator’s RBC business account and approved weekly settlement ledger. |
+| Race Entry | Pay to enter an eligible race while a prepaid lineup term is active. | $25 one-time event-access payment per entry. | Standard product receipt. Player prizes remain separately controlled. |
 | Vehicle Ownership | Optionally convert a rental car into a permanent in-game unlock. | One-time individual vehicle product. | Standard product receipt. |
 | Parts and garage services | Buy a named component, tune, install, service, or cosmetic action. | One-time micro-payment per catalog item. | Standard product receipt. |
 | Player awards and prize movement | Receive campaign progression and award outcomes. | Separate restricted workflow. | Must not be mixed with ordinary shop and subscription receipts. |
 
-## Garage Lineup Subscription Terms
+## Garage Lineup Prepaid Terms
 
-A member pays for access to **a lineup of cars**, not merely a single vehicle. Each plan renews at its selected term through the approved business-payment arrangement until the player cancels through the account’s supported billing process. The term plans below preserve the range stated for the game; the amounts remain a **draft catalog awaiting final approval before live bank-payment activation**.
+A member pays for access to **a lineup of cars**, not merely a single vehicle. Each plan is paid once for its selected term. A renewal request may be issued before the covered-through date, but no automatic renewal is assumed. The term plans below preserve the range stated for the game; the amounts remain a **draft catalog awaiting final approval before live bank-payment activation**.
 
 | Bank order key | Term | Draft price | Renewal cadence | Included access |
 |---|---:|---:|---|---|
@@ -60,11 +60,11 @@ The full vehicle, part, garage-service, and cosmetic inventory is commercially p
 | Permanent vehicle unlocks | 9 | One-time | Car remains in the player’s permanent garage. |
 | Performance parts and services | 13 | One-time | Named part, tune, service, or cosmetic is unlocked. |
 | Race entries | 7 planned event products | One-time | One entry to the named eligible event. |
-| Garage lineup terms | 6 | Recurring | Temporary lineup access for the paid term. |
+| Garage lineup terms | 6 | One-time prepaid | Temporary lineup access through the paid covered-through date. |
 
 ## Creator Settlement and Financial Boundary
 
-All ordinary paid catalog items—subscriptions, race access, permanent vehicles, parts, services, and cosmetics—are represented as business-payment orders payable to the creator’s RBC business account. The customer authorizes payment through their own bank, and the business-payment service provides the confirmation used for reconciliation. Eligible proceeds settle on the creator’s approved **weekly** settlement cadence. Neither the game client nor this repository stores card numbers, account-routing details, banking credentials, or tax identity information.
+All ordinary paid catalog items—prepaid lineup access, race access, permanent vehicles, parts, services, and cosmetics—are represented as business-payment orders payable to the creator’s RBC business account. The customer authorizes payment through their own bank, and the business-payment service provides the confirmation used for reconciliation. Eligible proceeds settle on the creator’s approved **weekly** settlement cadence. Neither the game client nor this repository stores card numbers, account-routing details, banking credentials, or tax identity information.
 
 Player award and prize disbursement flows are deliberately separated from ordinary catalog revenue. They require their own eligibility, official-rule, review, audit, and payout controls before a payment provider is asked to distribute awards.
 
@@ -76,3 +76,8 @@ Live collection remains off until the creator approves the entire price table, e
 ## Receiving Bank Decision
 
 The primary receiving institution for the direct-bank payment path is **RBC Royal Bank**, using the creator’s existing sole-proprietorship business relationship. Scotiabank remains an alternative institution but is not the primary settlement path. The creator’s legal name, Gmail address, business number, licensing records, account numbers, and login credentials remain confined to the secure bank or payment-provider onboarding flow and are not stored in this repository.
+
+
+## Featured Car — Real-World Build Context
+
+The featured creator build is presented as a stock vehicle reference plus a separately funded race build. The current user-provided estimate is approximately **$250,000 CAD for the stock vehicle** and approximately **$100,000 CAD in engine and supporting add-ons**, before ongoing suspension calibration, tuning, and maintenance. These figures are contextual build economics only; they are not silently converted into shop charges. The showroom must distinguish stock horsepower from the completed 1,000-HP build and display the build investment separately.

@@ -1,82 +1,80 @@
 # Midnight Redline — Payable Product Inventory
 
-> **Status: Stripe catalog specification.** Every offering in this inventory is a commercially payable product. The file does not activate Stripe, create live products, collect payment details, or charge customers.
+> **Status: RBC business-payment catalog specification.** Every listed offering is a payable product in the shop. The file does not activate transfers, collect banking details, or grant access without confirmed payment.
 
 ## Creator-Directed Commercial Model
 
-Midnight Redline is a paid game catalog, not a single-subscription product. The catalog contains recurring membership offers and separate, one-time payable offerings for vehicle access, performance parts, services, and paid progression access. When live collection is approved, each eligible offering will map to its own Stripe Product and Price, with receipts settling to the creator’s Stripe account under its configured payout schedule.
+Midnight Redline is a paid competitive racing catalog, not a single low-cost membership. Players purchase prepaid lineup access, select a car, buy build components, and pay event access as they progress. Each payable item has an item-level order key, amount, description, and entitlement result. Ordinary receipts are directed to the creator’s RBC business settlement process on the approved weekly cadence. Player awards remain separate.
 
-| Catalog family | Billing type | Commercial role | Stripe representation |
+| Catalog family | Billing type | Shop treatment | Payment representation |
 |---|---|---|---|
-| Memberships | Recurring | Unlock continuing member access and subscription benefits. | One Stripe Product and recurring Price for each approved tier. |
-| Vehicle access | One-time | Unlock an individual vehicle configuration. | One Stripe Product and one-time Price for each car. |
-| Performance parts | One-time | Unlock an individual part or tuning item. | One Stripe Product and one-time Price for each part. |
-| Garage services | One-time | Unlock a service, calibration, installation, or cosmetic application. | One Stripe Product and one-time Price for each service. |
-| Paid access | One-time or recurring, as approved | Unlock optional access or progression products. | Separately defined Stripe Product and Price. |
-| Competitive prize operations | Segregated | Player awards and prize-ledger movement. | Not part of ordinary product checkout until a separate compliant prize workflow is approved. |
+| Lineup access | One-time prepaid | Select 1–6 months of access to the active race-ready lineup. | One business-payment order for the selected term. |
+| Vehicle access | One-time | Select one permanent vehicle unlock; vehicle prices vary by model. | One item-level business-payment order. |
+| Performance parts | One-time micro-payment | Buy named components for the selected build. | Cart item with its own order key and price. |
+| Garage services and cosmetics | One-time micro-payment | Buy tuning, service, installation, or finish actions. | Cart item with its own order key and price. |
+| Race access | One-time | Pay $25 for each eligible event after lineup access is confirmed. | One event-specific business-payment order. |
+| Competitive prize operations | Segregated | Player awards are not ordinary shop purchases. | Separate controlled ledger and workflow. |
 
-## Recorded Membership Pricing
+## Prepaid Lineup Access
 
-| Product code | Offering | Billing cadence | Current source price | Stripe product status |
-|---|---|---|---:|---|
-| `nitro-pass-monthly` | Nitro Pass | Monthly recurring | $12 per month | Must be created as a recurring Stripe Price after the full tier schedule is reconciled. |
+Each player pays once for the selected term and receives a covered-through date. The lineup gives access to multiple race-ready cars, the garage, dyno, qualifiers, and host progression. A renewal request may be offered before expiry; no automatic recurring e-transfer is assumed.
 
-The present source contains the Nitro Pass monthly display value, but it does not retain the additional membership-tier names, benefits, or amounts discussed outside the repository. Those tiers must be restored before activation; this single value must not be presented as the entire commercial structure.
-
-## Vehicle Access Products
-
-| Product code | Vehicle | Current source catalog value | Billing type | Stripe product status |
-|---|---|---:|---|---|
-| `vehicle-havoc-707` | Havoc 707 | 42,000 | One-time | Individual Stripe Product and Price required. |
-| `vehicle-c8-vortex` | C8 Vortex | 78,000 | One-time | Individual Stripe Product and Price required. |
-| `vehicle-zl-track` | ZL Track | 51,000 | One-time | Individual Stripe Product and Price required. |
-| `vehicle-iron-charger` | Iron Charger | 36,000 | One-time | Individual Stripe Product and Price required. |
-| `vehicle-chevelle-ssr` | Chevelle SSR | 33,000 | One-time | Individual Stripe Product and Price required. |
-| `vehicle-nova-8` | Nova 8 | 27,500 | One-time or campaign reward | Individual Stripe Product and Price required when sold. |
-| `vehicle-firebird-ram` | Firebird Ram | 29,000 | One-time | Individual Stripe Product and Price required. |
-| `vehicle-avento-r` | Avento R | 145,000 | One-time | Individual Stripe Product and Price required. |
-| `vehicle-monza-v12` | Monza V12 | 165,000 | One-time | Individual Stripe Product and Price required. |
-
-## Performance Parts and Services Products
-
-| Product code | Offering | Current source catalog value | Billing type | Stripe product status |
-|---|---|---:|---|---|
-| `service-dyno-street-tune` | Dyno Street Tune | 6 | One-time | Individual Stripe Product and Price required. |
-| `service-ecu-flash` | ECU Flash | 15 | One-time | Individual Stripe Product and Price required. |
-| `part-10-5-drag-radials` | 10.5 Drag Radials | 10 | One-time | Individual Stripe Product and Price required. |
-| `part-4-barrel-carb-kit` | 4-Barrel Carb Kit | 15 | One-time | Individual Stripe Product and Price required. |
-| `part-wet-nitrous-kit` | Wet Nitrous Kit | 25 | One-time | Individual Stripe Product and Price required. |
-| `part-short-ratio-transmission` | Short-Ratio Transmission | 35 | One-time | Individual Stripe Product and Price required. |
-| `part-4-10-rear-end` | 4.10 Rear End | 75 | One-time | Individual Stripe Product and Price required. |
-| `service-weight-relief` | Weight Relief | 60 | One-time | Individual Stripe Product and Price required. |
-| `part-roots-supercharger` | Roots Supercharger | 35 | One-time | Individual Stripe Product and Price required. |
-| `part-twin-scroll-turbo` | Twin-Scroll Turbo | 35 | One-time | Individual Stripe Product and Price required. |
-| `part-free-flow-exhaust` | Free-Flow Exhaust | 18 | One-time | Individual Stripe Product and Price required. |
-| `part-forged-wheel-package` | Forged Wheel Package | 8 | One-time | Individual Stripe Product and Price required. |
-| `service-midnight-paint-finish` | Midnight Paint Finish | 5 | One-time | Individual Stripe Product and Price required. |
-
-## Competitive-Event Products and Awards
-
-| Product code | Offering | Current source catalog value | Commercial treatment |
+| Product code | Offering | Price | Coverage |
 |---|---|---:|---|
-| `event-dockside-pulse-entry` | Dockside Pulse entry | 250 | Candidate paid access product; not activated as an entry fee pending separate prize-operation approval. |
-| `event-underpass-eight-entry` | Underpass Eight entry | 400 | Candidate paid access product; not activated as an entry fee pending separate prize-operation approval. |
-| `event-signal-burn-entry` | Signal Burn entry | 650 | Candidate paid access product; not activated as an entry fee pending separate prize-operation approval. |
-| `event-blacktop-tax-entry` | Blacktop Tax entry | 900 | Candidate paid access product; not activated as an entry fee pending separate prize-operation approval. |
-| `event-freightline-entry` | Freightline entry | 1,250 | Candidate paid access product; not activated as an entry fee pending separate prize-operation approval. |
-| `event-midnight-redline-entry` | Midnight Redline entry | 2,500 | Candidate paid access product; not activated as an entry fee pending separate prize-operation approval. |
-| `event-pink-slip-entry` | Pink Slip event entry | 750 | Candidate paid access product; not activated as a real-world vehicle transaction. |
-| `award-campaign-results` | Race result awards | 1,250–15,000 | Segregated player-award ledger; not a standard creator checkout product. |
+| `garage_lineup_1m` | Garage Lineup Access — 1 Month | **$40 CAD** | 1 month |
+| `garage_lineup_2m` | Garage Lineup Access — 2 Months | **$45 CAD** | 2 months |
+| `garage_lineup_3m` | Garage Lineup Access — 3 Months | **$55 CAD** | 3 months |
+| `garage_lineup_4m` | Garage Lineup Access — 4 Months | **$65 CAD** | 4 months |
+| `garage_lineup_5m` | Garage Lineup Access — 5 Months | **$75 CAD** | 5 months |
+| `garage_lineup_6m` | Garage Lineup Access — 6 Months | **$80 CAD** | 6 months |
 
-## Required Before Live Stripe Activation
+## Permanent Vehicle Products
 
-Every live offering needs an explicit real-money amount, currency, Stripe Product ID, Stripe Price ID or lookup key, tax code, refund treatment, and entitlement outcome. The encoded source values above are the available in-game catalogue values, not an approved dollar conversion or a complete record of the additional subscription tiers. The final tier schedule and external prices must be reviewed as a whole before the Stripe account is connected and live collection begins.
+Vehicle prices are itemized separately. The current game values map to the intended hundreds-of-dollars range as CAD shop prices; the source game value is retained in code for auditability.
 
-## Source Locations
+| Product code | Vehicle | Shop price |
+|---|---|---:|
+| `vehicle_havoc_707` | Havoc 707 | **$420 CAD** |
+| `vehicle_c8_vortex` | C8 Vortex | **$780 CAD** |
+| `vehicle_zl_track` | ZL Track | **$510 CAD** |
+| `vehicle_iron_charger` | Iron Charger | **$360 CAD** |
+| `vehicle_chevelle_ssr` | Chevelle SSR | **$330 CAD** |
+| `vehicle_nova_8` | Nova 8 | **$275 CAD** |
+| `vehicle_firebird_ram` | Firebird Ram | **$290 CAD** |
+| `vehicle_avento_r` | Avento R | **$1,450 CAD** |
+| `vehicle_monza_v12` | Monza V12 | **$1,650 CAD** |
 
-| Data area | Source |
-|---|---|
-| Membership display and membership-gating interface | `client/src/components/RaceOverlay.tsx` |
-| Vehicle, upgrade, rival, entry, and award catalog values | `client/src/game/raceData.ts` |
-| Vehicle, part, and event purchase mechanics | `client/src/game/GameWorld.ts` |
-| Commercial ownership and payout boundary | `todo.md` |
+A vehicle purchase is a permanent in-game unlock as described at the point of sale. If a future game mode can consume, retire, or remove a vehicle, that rule must be disclosed and confirmed before the purchase; the current shop does not silently charge for replacement vehicles.
+
+## Garage Parts, Services, and Cosmetics
+
+Each item below is a separate one-time micro-product. Players may combine multiple items in one cart to reduce repeated payment friction and receive one clear order reference.
+
+| Product code | Offering | Shop price |
+|---|---|---:|
+| `service_dyno_street_tune` | Dyno Street Tune | **$6 CAD** |
+| `service_ecu_flash` | ECU Flash | **$15 CAD** |
+| `part_10_5_drag_radials` | 10.5 Drag Radials | **$10 CAD** |
+| `part_4_barrel_carb_kit` | 4-Barrel Carb Kit | **$15 CAD** |
+| `part_wet_nitrous_kit` | Wet Nitrous Kit | **$25 CAD** |
+| `part_short_ratio_transmission` | Short-Ratio Transmission | **$35 CAD** |
+| `part_4_10_rear_end` | 4.10 Rear End | **$75 CAD** |
+| `service_weight_relief` | Weight Relief | **$60 CAD** |
+| `part_roots_supercharger` | Roots Supercharger | **$35 CAD** |
+| `part_twin_scroll_turbo` | Twin-Scroll Turbo | **$35 CAD** |
+| `part_free_flow_exhaust` | Free-Flow Exhaust | **$18 CAD** |
+| `part_forged_wheel_package` | Forged Wheel Package | **$8 CAD** |
+| `service_midnight_paint_finish` | Midnight Paint Finish | **$5 CAD** |
+
+## Race Access
+
+Each eligible event costs **$25 CAD** after the player has confirmed prepaid lineup access. The order ledger records the named event and grants one entry only after the matching bank payment is confirmed.
+
+## Payment and Entitlement Boundary
+
+The customer receives a payment request by email or phone and authorizes it through their own bank. The game creates an order reference and records what is due, who the order belongs to through the approved account reference, and whether payment is pending or confirmed. It does not store bank credentials or account numbers. No subscription, race entry, car, part, service, or cosmetic is unlocked until the confirmed transfer matches the order amount and reference.
+
+
+## Showroom-to-Garage Sequence
+
+The front page functions as the vehicle showroom and competitive entry point. It presents the featured creator car alongside comparable vehicles with horsepower, weight, class, estimated time, description, and itemized price. A player first selects and purchases a vehicle, then enters the garage to purchase compatible parts and services. The resulting build stats determine its performance band and the appropriate race matchup; add-ons must not be hidden behind the vehicle purchase or bundled without an itemized price.

@@ -182,6 +182,16 @@ export const VEHICLES: VehicleSpec[] = [
   },
 ];
 
+export const FEATURED_BUILD = {
+  vehicleId: "havoc-707",
+  stockHorsepower: 707,
+  builtHorsepower: 1000,
+  realWorldStockValueCents: 25_000_000,
+  engineAddOnInvestmentCents: 10_000_000,
+  topSpeedKph: 200,
+  suspensionSensitivityLabel: "CUSTOM RACE-RANGE CALIBRATION",
+} as const;
+
 export const UPGRADES: Upgrade[] = [
   { id: "street-tune", name: "Dyno Street Tune", category: "CALIBRATION", price: 6, compatible: ["modern", "heritage", "exotic"], horsepower: 22, detail: "+22 hp · ignition and fuel map" },
   { id: "ecu", name: "ECU Flash", category: "CALIBRATION", price: 15, compatible: ["modern", "exotic"], horsepower: 45, detail: "+45 hp · sharpened ignition map" },

@@ -39,6 +39,7 @@ export class GameWorld {
    * The local demo flag remains available solely for deterministic visual testing.
    */
   private verifiedLineupAccess = false;
+  private lineupCoveredThrough: string | null = null;
   private verifiedRaceEntry = false;
 
   constructor(scene: Scene) {
@@ -127,16 +128,24 @@ export class GameWorld {
   purchaseUpgrade(id: string) {
     if (this.boughtUpgrades.includes(id)) { this.message = "UPGRADE ALREADY INSTALLED."; this.emit(); return; }
     const upgrade = UPGRADES.find((item) => item.id === id);
-    if (!upgrade || this.cash < upgrade.price) { this.message = "INSUFFICIENT CASH BALANCE."; this.emit(); return; }
+    if (!upgrade) { this.message = "PART NOT FOUND IN THE VALIDATED CATALOG."; this.emit(); return; }
+    if (!upgrade.compatible.includes(this.currentVehicle().archetype)) { this.message = "PART NOT COMPATIBLE WITH THIS VEHICLE ARCHETYPE."; this.emit(); return; }
+    if (this.cash < upgrade.price) { this.message = "INSUFFICIENT CASH BALANCE."; this.emit(); return; }
     this.cash -= upgrade.price;
     this.boughtUpgrades.push(id);
     this.message = `${upgrade.name.toUpperCase()} INSTALLED.`;
     this.emit();
   }
 
+  private hasActiveLineupAccess() {
+    if (!this.verifiedLineupAccess) return false;
+    if (!this.lineupCoveredThrough) return true;
+    return Date.parse(this.lineupCoveredThrough) > Date.now();
+  }
+
   beginRace(pinkSlip = false) {
     if (this.mode === "racing" || this.mode === "countdown" || this.mode === "staging") return;
-    if (!this.demo && !this.verifiedLineupAccess) {
+    if (!this.demo && !this.hasActiveLineupAccess()) {
       this.message = "ACTIVE LINEUP SUBSCRIPTION REQUIRED. COMPLETE VERIFIED CHECKOUT TO ENTER THE GARAGE.";
       this.emit();
       return;
@@ -168,13 +177,14 @@ export class GameWorld {
    * Future server integration calls this only after verifying the bank-payment confirmation data
    * and loading the entitlement record for the authenticated player.
    */
-  applyVerifiedCommerceEntitlements({ lineupActive, raceEntryActive }: { lineupActive: boolean; raceEntryActive: boolean }) {
+  applyVerifiedCommerceEntitlements({ lineupActive, raceEntryActive, lineupCoveredThrough = null }: { lineupActive: boolean; raceEntryActive: boolean; lineupCoveredThrough?: string | null }) {
     if (this.demo) return;
     this.verifiedLineupAccess = lineupActive;
+    this.lineupCoveredThrough = lineupCoveredThrough;
     this.verifiedRaceEntry = raceEntryActive;
-    this.message = lineupActive
-      ? raceEntryActive ? "VERIFIED LINEUP AND QUALIFIER ACCESS READY." : "LINEUP VERIFIED. ADD A $25 QUALIFIER ENTRY TO RACE."
-      : "ACTIVE LINEUP SUBSCRIPTION REQUIRED.";
+    this.message = this.hasActiveLineupAccess()
+      ? raceEntryActive ? `VERIFIED LINEUP READY THROUGH ${new Date(lineupCoveredThrough ?? Date.now()).toLocaleDateString()}.` : "LINEUP VERIFIED. ADD A $25 QUALIFIER ENTRY TO RACE."
+      : "ACTIVE LINEUP SUBSCRIPTION REQUIRED OR RENEWAL NEEDED.";
     this.emit();
   }
 

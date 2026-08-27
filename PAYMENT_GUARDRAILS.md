@@ -51,3 +51,8 @@ The order ledger records the selected product or cart, the amount due, a custome
 A customer receives no paid access while an order is pending, rejected, expired, refunded, or otherwise unconfirmed. Access begins only when the approved bank-payment channel confirms receipt of the exact order amount and reference. This payment result is not a credit-score assessment.
 
 A subscription term is a commercial access period, but an ordinary e-transfer does not silently renew itself. Each renewal must use a new bank payment request or an explicit recurring authorization supported by the bank service. If renewal funds are not confirmed, the lineup moves to renewal-required status and the player cannot enter another paid event until access is restored.
+
+
+## Settlement Destination
+
+Customer payment requests use the creator’s designated business email address or phone number, linked to the RBC business account. The project stores no actual contact value or banking credential. A payment remains pending until the business-side transfer confirmation matches its unique order reference and amount.

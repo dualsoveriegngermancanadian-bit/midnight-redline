@@ -1,5 +1,5 @@
-export type BillingMode = "subscription" | "payment";
-export type CommerceCategory = "lineup" | "race_entry" | "vehicle" | "part" | "service" | "cosmetic";
+export type BillingMode = "prepaid_term" | "payment";
+export type CommerceCategory = "lineup" | "race_entry" | "vehicle" | "engine" | "part" | "service" | "cosmetic";
 
 export type CommerceProduct = {
   id: string;
@@ -17,12 +17,12 @@ export type CommerceProduct = {
 };
 
 export const LINEUP_SUBSCRIPTIONS: CommerceProduct[] = [
-  { id: "garage-lineup-1m", lookupKey: "garage_lineup_1m", name: "Garage Lineup — 1 Month", description: "One month of active rental-lineup, garage, dyno, qualifier, and host-progression access.", category: "lineup", billingMode: "subscription", amountCents: 4000, intervalMonths: 1 },
-  { id: "garage-lineup-2m", lookupKey: "garage_lineup_2m", name: "Garage Lineup — 2 Months", description: "Two months of active rental-lineup, garage, dyno, qualifier, and host-progression access.", category: "lineup", billingMode: "subscription", amountCents: 4500, intervalMonths: 2 },
-  { id: "garage-lineup-3m", lookupKey: "garage_lineup_3m", name: "Garage Lineup — 3 Months", description: "Three months of active rental-lineup, garage, dyno, qualifier, and host-progression access.", category: "lineup", billingMode: "subscription", amountCents: 5500, intervalMonths: 3 },
-  { id: "garage-lineup-4m", lookupKey: "garage_lineup_4m", name: "Garage Lineup — 4 Months", description: "Four months of active rental-lineup, garage, dyno, qualifier, and host-progression access.", category: "lineup", billingMode: "subscription", amountCents: 6500, intervalMonths: 4 },
-  { id: "garage-lineup-5m", lookupKey: "garage_lineup_5m", name: "Garage Lineup — 5 Months", description: "Five months of active rental-lineup, garage, dyno, qualifier, and host-progression access.", category: "lineup", billingMode: "subscription", amountCents: 7500, intervalMonths: 5 },
-  { id: "garage-lineup-6m", lookupKey: "garage_lineup_6m", name: "Garage Lineup — 6 Months", description: "Six months of active rental-lineup, garage, dyno, qualifier, and host-progression access.", category: "lineup", billingMode: "subscription", amountCents: 8000, intervalMonths: 6 },
+  { id: "garage-lineup-1m", lookupKey: "garage_lineup_1m", name: "Garage Lineup — 1 Month", description: "One month of active rental-lineup, garage, dyno, qualifier, and host-progression access.", category: "lineup", billingMode: "prepaid_term", amountCents: 4000, intervalMonths: 1 },
+  { id: "garage-lineup-2m", lookupKey: "garage_lineup_2m", name: "Garage Lineup — 2 Months", description: "Two months of active rental-lineup, garage, dyno, qualifier, and host-progression access.", category: "lineup", billingMode: "prepaid_term", amountCents: 4500, intervalMonths: 2 },
+  { id: "garage-lineup-3m", lookupKey: "garage_lineup_3m", name: "Garage Lineup — 3 Months", description: "Three months of active rental-lineup, garage, dyno, qualifier, and host-progression access.", category: "lineup", billingMode: "prepaid_term", amountCents: 5500, intervalMonths: 3 },
+  { id: "garage-lineup-4m", lookupKey: "garage_lineup_4m", name: "Garage Lineup — 4 Months", description: "Four months of active rental-lineup, garage, dyno, qualifier, and host-progression access.", category: "lineup", billingMode: "prepaid_term", amountCents: 6500, intervalMonths: 4 },
+  { id: "garage-lineup-5m", lookupKey: "garage_lineup_5m", name: "Garage Lineup — 5 Months", description: "Five months of active rental-lineup, garage, dyno, qualifier, and host-progression access.", category: "lineup", billingMode: "prepaid_term", amountCents: 7500, intervalMonths: 5 },
+  { id: "garage-lineup-6m", lookupKey: "garage_lineup_6m", name: "Garage Lineup — 6 Months", description: "Six months of active rental-lineup, garage, dyno, qualifier, and host-progression access.", category: "lineup", billingMode: "prepaid_term", amountCents: 8000, intervalMonths: 6 },
 ];
 
 export const RACE_ACCESS_PRODUCTS: CommerceProduct[] = [
@@ -30,15 +30,21 @@ export const RACE_ACCESS_PRODUCTS: CommerceProduct[] = [
 ];
 
 export const VEHICLE_PRODUCTS: CommerceProduct[] = [
-  { id: "vehicle-havoc-707", lookupKey: "vehicle_havoc_707", name: "Havoc 707 — Permanent Garage Unlock", description: "Permanent in-game unlock for the Havoc 707.", category: "vehicle", billingMode: "payment", amountCents: null, sourceGameValue: 42000 },
-  { id: "vehicle-c8-vortex", lookupKey: "vehicle_c8_vortex", name: "C8 Vortex — Permanent Garage Unlock", description: "Permanent in-game unlock for the C8 Vortex.", category: "vehicle", billingMode: "payment", amountCents: null, sourceGameValue: 78000 },
-  { id: "vehicle-zl-track", lookupKey: "vehicle_zl_track", name: "ZL Track — Permanent Garage Unlock", description: "Permanent in-game unlock for the ZL Track.", category: "vehicle", billingMode: "payment", amountCents: null, sourceGameValue: 51000 },
-  { id: "vehicle-iron-charger", lookupKey: "vehicle_iron_charger", name: "Iron Charger — Permanent Garage Unlock", description: "Permanent in-game unlock for the Iron Charger.", category: "vehicle", billingMode: "payment", amountCents: null, sourceGameValue: 36000 },
-  { id: "vehicle-chevelle-ssr", lookupKey: "vehicle_chevelle_ssr", name: "Chevelle SSR — Permanent Garage Unlock", description: "Permanent in-game unlock for the Chevelle SSR.", category: "vehicle", billingMode: "payment", amountCents: null, sourceGameValue: 33000 },
-  { id: "vehicle-nova-8", lookupKey: "vehicle_nova_8", name: "Nova 8 — Permanent Garage Unlock", description: "Permanent in-game unlock for the Nova 8.", category: "vehicle", billingMode: "payment", amountCents: null, sourceGameValue: 27500 },
-  { id: "vehicle-firebird-ram", lookupKey: "vehicle_firebird_ram", name: "Firebird Ram — Permanent Garage Unlock", description: "Permanent in-game unlock for the Firebird Ram.", category: "vehicle", billingMode: "payment", amountCents: null, sourceGameValue: 29000 },
-  { id: "vehicle-avento-r", lookupKey: "vehicle_avento_r", name: "Avento R — Permanent Garage Unlock", description: "Permanent in-game unlock for the Avento R.", category: "vehicle", billingMode: "payment", amountCents: null, sourceGameValue: 145000 },
-  { id: "vehicle-monza-v12", lookupKey: "vehicle_monza_v12", name: "Monza V12 — Permanent Garage Unlock", description: "Permanent in-game unlock for the Monza V12.", category: "vehicle", billingMode: "payment", amountCents: null, sourceGameValue: 165000 },
+  { id: "vehicle-havoc-707", lookupKey: "vehicle_havoc_707", name: "Havoc 707 — Permanent Garage Unlock", description: "Permanent in-game unlock for the Havoc 707.", category: "vehicle", billingMode: "payment", amountCents: 42000, sourceGameValue: 42000 },
+  { id: "vehicle-c8-vortex", lookupKey: "vehicle_c8_vortex", name: "C8 Vortex — Permanent Garage Unlock", description: "Permanent in-game unlock for the C8 Vortex.", category: "vehicle", billingMode: "payment", amountCents: 78000, sourceGameValue: 78000 },
+  { id: "vehicle-zl-track", lookupKey: "vehicle_zl_track", name: "ZL Track — Permanent Garage Unlock", description: "Permanent in-game unlock for the ZL Track.", category: "vehicle", billingMode: "payment", amountCents: 51000, sourceGameValue: 51000 },
+  { id: "vehicle-iron-charger", lookupKey: "vehicle_iron_charger", name: "Iron Charger — Permanent Garage Unlock", description: "Permanent in-game unlock for the Iron Charger.", category: "vehicle", billingMode: "payment", amountCents: 36000, sourceGameValue: 36000 },
+  { id: "vehicle-chevelle-ssr", lookupKey: "vehicle_chevelle_ssr", name: "Chevelle SSR — Permanent Garage Unlock", description: "Permanent in-game unlock for the Chevelle SSR.", category: "vehicle", billingMode: "payment", amountCents: 33000, sourceGameValue: 33000 },
+  { id: "vehicle-nova-8", lookupKey: "vehicle_nova_8", name: "Nova 8 — Permanent Garage Unlock", description: "Permanent in-game unlock for the Nova 8.", category: "vehicle", billingMode: "payment", amountCents: 27500, sourceGameValue: 27500 },
+  { id: "vehicle-firebird-ram", lookupKey: "vehicle_firebird_ram", name: "Firebird Ram — Permanent Garage Unlock", description: "Permanent in-game unlock for the Firebird Ram.", category: "vehicle", billingMode: "payment", amountCents: 29000, sourceGameValue: 29000 },
+  { id: "vehicle-avento-r", lookupKey: "vehicle_avento_r", name: "Avento R — Permanent Garage Unlock", description: "Permanent in-game unlock for the Avento R.", category: "vehicle", billingMode: "payment", amountCents: 145000, sourceGameValue: 145000 },
+  { id: "vehicle-monza-v12", lookupKey: "vehicle_monza_v12", name: "Monza V12 — Permanent Garage Unlock", description: "Permanent in-game unlock for the Monza V12.", category: "vehicle", billingMode: "payment", amountCents: 165000, sourceGameValue: 165000 },
+];
+
+export const ENGINE_PRODUCTS: CommerceProduct[] = [
+  { id: "engine-havoc-1000-replacement", lookupKey: "engine_havoc_1000_replacement", name: "Havoc 1,000 HP Replacement Engine", description: "Complete modern-archetype replacement engine for a blown Havoc build. Price requires approval before sale.", category: "engine", billingMode: "payment", amountCents: null, requiresActiveLineup: true },
+  { id: "engine-heritage-850-replacement", lookupKey: "engine_heritage_850_replacement", name: "Heritage 850 HP Replacement Engine", description: "Complete heritage-archetype replacement engine for a failed classic build. Price requires approval before sale.", category: "engine", billingMode: "payment", amountCents: null, requiresActiveLineup: true },
+  { id: "engine-exotic-1000-replacement", lookupKey: "engine_exotic_1000_replacement", name: "Exotic 1,000 HP Replacement Engine", description: "Complete exotic-archetype replacement engine for a failed high-output build. Price requires approval before sale.", category: "engine", billingMode: "payment", amountCents: null, requiresActiveLineup: true },
 ];
 
 export const GARAGE_MICRO_PRODUCTS: CommerceProduct[] = [
@@ -61,6 +67,7 @@ export const COMMERCE_PRODUCTS: CommerceProduct[] = [
   ...LINEUP_SUBSCRIPTIONS,
   ...RACE_ACCESS_PRODUCTS,
   ...VEHICLE_PRODUCTS,
+  ...ENGINE_PRODUCTS,
   ...GARAGE_MICRO_PRODUCTS,
 ];
 
@@ -74,8 +81,8 @@ export function findCommerceProducts(ids: string[]): CommerceProduct[] | null {
 }
 
 export function isValidCheckoutCart(products: CommerceProduct[]) {
-  const containsSubscription = products.some((product) => product.billingMode === "subscription");
-  return !containsSubscription || (products.length === 1 && products[0].category === "lineup");
+  const containsPrepaidTerm = products.some((product) => product.billingMode === "prepaid_term");
+  return !containsPrepaidTerm || (products.length === 1 && products[0].category === "lineup");
 }
 
 export function formatUsd(cents: number | null) {

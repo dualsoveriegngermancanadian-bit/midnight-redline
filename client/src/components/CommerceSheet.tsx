@@ -4,6 +4,7 @@ import {
   GARAGE_MICRO_PRODUCTS,
   LINEUP_SUBSCRIPTIONS,
   RACE_ACCESS_PRODUCTS,
+  VEHICLE_PRODUCTS,
   formatUsd,
   type CommerceProduct,
 } from "@shared/commerce";
@@ -22,7 +23,7 @@ export default function CommerceSheet({ onDemoActivate }: Props) {
   const demoMode = new URLSearchParams(window.location.search).has("demo");
   const selectedPlan = LINEUP_SUBSCRIPTIONS.find((plan) => plan.id === selectedPlanId) ?? LINEUP_SUBSCRIPTIONS[0];
   const cartProducts = useMemo(
-    () => GARAGE_MICRO_PRODUCTS.filter((product) => cartProductIds.includes(product.id)),
+    () => [...VEHICLE_PRODUCTS, ...GARAGE_MICRO_PRODUCTS].filter((product) => cartProductIds.includes(product.id)),
     [cartProductIds],
   );
   const cartTotal = cartProducts.reduce((total, product) => total + (product.amountCents ?? 0), 0);
@@ -65,20 +66,28 @@ export default function CommerceSheet({ onDemoActivate }: Props) {
   return <>
     <div className="sheet-eyebrow">COMPETITIVE GARAGE <span>—</span> PAYABLE CATALOG</div>
     <section className="commerce-intro">
-      <div><span>RACE THE FULL LINEUP</span><h2>Choose the garage.<br />Build the car.</h2><p>An active lineup subscription keeps multiple cars race-ready while you tune, qualify, and progress toward The Architect’s final host run.</p></div>
+      <div><span>RACE THE FULL LINEUP</span><h2>Choose the garage.<br />Build the car.</h2><p>A prepaid lineup term keeps multiple cars race-ready while you tune, qualify, and progress toward The Architect’s final host run. Renew before the covered-through date to keep racing.</p></div>
       <aside><CircleDollarSign size={20} /><b>WEEKLY<br />CREATOR PAYOUTS</b><small>RBC business payment request. No financial details are collected in-game.</small></aside>
     </section>
 
-    <div className="commerce-section-title">LINEUP SUBSCRIPTION <small>RECURRING TERM</small></div>
+    <div className="commerce-section-title">LINEUP ACCESS <small>PREPAID TERM</small></div>
     <div className="lineup-grid">
       {LINEUP_SUBSCRIPTIONS.map((plan) => <button key={plan.id} className={`lineup-plan ${plan.id === selectedPlan.id ? "selected" : ""}`} onClick={() => changePlan(plan)}>
-        <span>{plan.intervalMonths} MONTH{plan.intervalMonths === 1 ? "" : "S"}</span><b>{formatUsd(plan.amountCents)}</b><small>RENWS EVERY {plan.intervalMonths} MONTH{plan.intervalMonths === 1 ? "" : "S"}</small><i>{plan.id === selectedPlan.id ? <Check size={14} /> : "SELECT"}</i>
+        <span>{plan.intervalMonths} MONTH{plan.intervalMonths === 1 ? "" : "S"}</span><b>{formatUsd(plan.amountCents)}</b><small>PAID UP FRONT · {plan.intervalMonths} MONTH{plan.intervalMonths === 1 ? "" : "S"} COVERAGE</small><i>{plan.id === selectedPlan.id ? <Check size={14} /> : "SELECT"}</i>
       </button>)}
     </div>
-    <div className="commerce-action-row"><div><b>{selectedPlan.name}</b><span>Active lineup access · garage · dyno · qualifiers · host progression</span></div><button className="primary-button" disabled={checkoutState === "loading"} onClick={() => beginCheckout([selectedPlan.id])}>{checkoutState === "loading" ? "PREPARING…" : `REQUEST ${formatUsd(selectedPlan.amountCents)}`} <LockKeyhole size={15} /></button></div>
+    <div className="commerce-action-row"><div><b>{selectedPlan.name}</b><span>Prepaid lineup access · garage · dyno · qualifiers · host progression</span></div><button className="primary-button" disabled={checkoutState === "loading"} onClick={() => beginCheckout([selectedPlan.id])}>{checkoutState === "loading" ? "PREPARING…" : `REQUEST ${formatUsd(selectedPlan.amountCents)}`} <LockKeyhole size={15} /></button></div>
 
     <div className="commerce-section-title">QUALIFIER ACCESS <small>ACTIVE MEMBERS</small></div>
-    <div className="race-access-card"><div><span>ONE EVENT ENTRY</span><b>{formatUsd(raceEntry.amountCents)} <small>PER RACE</small></b><p>Every eligible qualifier requires an active lineup subscription and a separately verified entry entitlement.</p></div><button className="minor-button" disabled={checkoutState === "loading"} onClick={() => beginCheckout([raceEntry.id])}>ADD RACE ENTRY</button></div>
+    <div className="race-access-card"><div><span>ONE EVENT ENTRY</span><b>{formatUsd(raceEntry.amountCents)} <small>PER RACE</small></b><p>Every eligible qualifier requires an active prepaid lineup term and a separately verified entry entitlement.</p></div><button className="minor-button" disabled={checkoutState === "loading"} onClick={() => beginCheckout([raceEntry.id])}>ADD RACE ENTRY</button></div>
+
+    <div className="commerce-section-title">VEHICLE ACCESS <small>PERMANENT UNLOCKS</small></div>
+    <div className="commerce-catalog vehicle-catalog">
+      {VEHICLE_PRODUCTS.map((product) => {
+        const included = cartProductIds.includes(product.id);
+        return <button key={product.id} className={`commerce-product ${included ? "in-cart" : ""}`} onClick={() => toggleCart(product)}><span>{product.category.toUpperCase()}</span><b>{product.name}</b><small>{product.description}</small><em>{formatUsd(product.amountCents)}</em><i>{included ? "IN CART" : "ADD"}</i></button>;
+      })}
+    </div>
 
     <div className="commerce-section-title">GARAGE CART <small>COMBINE PARTS TO REDUCE REPEATED FEES</small></div>
     <div className="commerce-catalog">
