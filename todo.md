@@ -40,6 +40,7 @@
 - [ ] Elevate the presentation and membership value proposition so the game feels compelling and premium before the subscription call-to-action.
 - [ ] Create a private GitHub repository, push the completed project, and document the repository location.
 - [ ] Ensure the user retains sole repository ownership, publishing control, and all commercial proceeds after the GitHub handoff.
+- [ ] Preserve the user-confirmed external licensing, ownership, and webhook arrangements as deployment context without storing personal identity details or banking credentials in the browser project.
 - [ ] Save a verified final project version that the user can publish through the in-app Publish control.
 - [ ] Verify desktop and mobile presentation, gameplay controls, deterministic demo mode, and type safety.
 - [ ] Save the completed project version and provide publishing instructions.
