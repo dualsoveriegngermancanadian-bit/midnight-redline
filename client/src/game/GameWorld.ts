@@ -34,6 +34,12 @@ export class GameWorld {
   private demoStarted = false;
   private hudTick = 0;
   private pinkSlip = false;
+  /**
+   * Production access can only be granted by a server-side verified Stripe event.
+   * The local demo flag remains available solely for deterministic visual testing.
+   */
+  private verifiedLineupAccess = false;
+  private verifiedRaceEntry = false;
 
   constructor(scene: Scene) {
     const vehicle = getVehicle(this.currentVehicleId);
@@ -130,10 +136,21 @@ export class GameWorld {
 
   beginRace(pinkSlip = false) {
     if (this.mode === "racing" || this.mode === "countdown" || this.mode === "staging") return;
+    if (!this.demo && !this.verifiedLineupAccess) {
+      this.message = "ACTIVE LINEUP SUBSCRIPTION REQUIRED. COMPLETE VERIFIED CHECKOUT TO ENTER THE GARAGE.";
+      this.emit();
+      return;
+    }
+    if (!this.demo && !this.verifiedRaceEntry) {
+      this.message = "VERIFIED $25 QUALIFIER ENTRY REQUIRED. ADD EVENT ACCESS THROUGH THE PAID GARAGE.";
+      this.emit();
+      return;
+    }
     const rival = RIVALS[pinkSlip ? 0 : this.round];
     const buyIn = pinkSlip ? 750 : rival.buyIn;
     if (this.cash < buyIn) { this.message = "BUY-IN NOT COVERED. RETURN TO THE GARAGE."; this.emit(); return; }
     this.pinkSlip = pinkSlip;
+    if (!this.demo) this.verifiedRaceEntry = false;
     this.cash -= buyIn;
     this.result = undefined;
     this.playerSim = new DragRaceSimulation(this.playerBuild());
@@ -144,6 +161,20 @@ export class GameWorld {
     this.stagingRpm = 2900;
     this.tree.setState("staged");
     this.message = pinkSlip ? "PINK SLIP STAGED. BEAT NOVA AND CLAIM THE NOVA 8." : "STAGED. HOLD [SPACE] TO BRING UP RPM. PRESS [S] TO ARM THE TREE.";
+    this.emit();
+  }
+
+  /**
+   * Future server integration calls this only after verifying Stripe webhook data
+   * and loading the entitlement record for the authenticated player.
+   */
+  applyVerifiedCommerceEntitlements({ lineupActive, raceEntryActive }: { lineupActive: boolean; raceEntryActive: boolean }) {
+    if (this.demo) return;
+    this.verifiedLineupAccess = lineupActive;
+    this.verifiedRaceEntry = raceEntryActive;
+    this.message = lineupActive
+      ? raceEntryActive ? "VERIFIED LINEUP AND QUALIFIER ACCESS READY." : "LINEUP VERIFIED. ADD A $25 QUALIFIER ENTRY TO RACE."
+      : "ACTIVE LINEUP SUBSCRIPTION REQUIRED.";
     this.emit();
   }
 

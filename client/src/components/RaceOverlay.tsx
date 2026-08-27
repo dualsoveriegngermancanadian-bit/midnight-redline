@@ -6,6 +6,7 @@ import { ArrowRight, BadgeDollarSign, ChevronRight, CircleDollarSign, Gauge, Loc
 import type { GameWorld } from "@/game/GameWorld";
 import { UPGRADES, VEHICLES, performanceClass } from "@/game/raceData";
 import type { RaceSnapshot } from "@/game/types";
+import CommerceSheet from "@/components/CommerceSheet";
 
 const PLAYER_CAR_IMAGE = "/manus-storage/player-turbo-coupe-profile_aab1f5b8.png";
 const RIVAL_CAR_IMAGE = "/manus-storage/rival-pearl-coupe-profile_38a0e407.png";
@@ -85,13 +86,13 @@ export default function RaceOverlay({ snapshot, world }: Props) {
       </div>
 
       {!isRaceActive && snapshot.mode !== "results" && (
-        <section className={`pit-sheet ${panel}`}>
-          {!memberReady && <MembershipSheet onActivate={() => { setMemberReady(true); setPanel("garage"); }} />}
+        <section className={`pit-sheet ${!memberReady || panel === "membership" ? "commerce-sheet" : panel}`}>
+          {!memberReady && <CommerceSheet onDemoActivate={() => { setMemberReady(true); setPanel("garage"); }} />}
           {memberReady && panel === "events" && <EventSheet snapshot={snapshot} world={world} onGarage={() => setPanel("garage")} />}
           {memberReady && panel === "garage" && <GarageSheet snapshot={snapshot} world={world} build={build} vehicleChosen={vehicleChosen} onVehicleSelected={() => setVehicleChosen(true)} />}
           {memberReady && !vehicleChosen && panel !== "membership" && <GarageSheet snapshot={snapshot} world={world} build={build} vehicleChosen={vehicleChosen} onVehicleSelected={() => setVehicleChosen(true)} />}
           {memberReady && panel === "dyno" && <DynoSheet snapshot={snapshot} build={build} run={dynoRun} onRun={() => setDynoRun((value) => value + 1)} />}
-          {memberReady && panel === "membership" && <MembershipSheet onActivate={() => { setMemberReady(true); setPanel("garage"); }} />}
+          {memberReady && panel === "membership" && <CommerceSheet onDemoActivate={() => { setMemberReady(true); setPanel("garage"); }} />}
         </section>
       )}
 

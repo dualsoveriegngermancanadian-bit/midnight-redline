@@ -1,0 +1,21 @@
+TYPE|PRODUCT|GROSS|CARD_FEE|BILLING_FEE|CREATOR_NET|FEE_PERCENT
+SUBSCRIPTION|garage_lineup_1m|$40|$1.460|$.280|$38.260|4.35%
+SUBSCRIPTION|garage_lineup_2m|$45|$1.605|$.315|$43.080|4.26%
+SUBSCRIPTION|garage_lineup_3m|$55|$1.895|$.385|$52.720|4.14%
+SUBSCRIPTION|garage_lineup_4m|$65|$2.185|$.455|$62.360|4.06%
+SUBSCRIPTION|garage_lineup_5m|$75|$2.475|$.525|$72.000|4.00%
+SUBSCRIPTION|garage_lineup_6m|$80|$2.620|$.560|$76.820|3.97%
+TYPE|PRODUCT|GROSS|CARD_FEE|CREATOR_NET|FEE_PERCENT
+ONE_TIME|race_entry|$25|$1.025|$23.975|4.10%
+ONE_TIME|micro_product_5|$5|$.445|$4.555|8.90%
+ONE_TIME|micro_product_6|$6|$.474|$5.526|7.90%
+ONE_TIME|micro_product_8|$8|$.532|$7.468|6.65%
+ONE_TIME|micro_product_10|$10|$.590|$9.410|5.90%
+ONE_TIME|micro_product_15|$15|$.735|$14.265|4.90%
+ONE_TIME|micro_product_18|$18|$.822|$17.178|4.56%
+ONE_TIME|micro_product_25|$25|$1.025|$23.975|4.10%
+ONE_TIME|micro_product_35|$35|$1.315|$33.685|3.75%
+ONE_TIME|micro_product_60|$60|$2.040|$57.960|3.40%
+ONE_TIME|micro_product_75|$75|$2.475|$72.525|3.30%
+CART_SAVINGS|3x$5 vs $15 cart|$1.335|$.735|$.600
+CART_SAVINGS|5x$5 vs $25 cart|$2.225|$1.025|$1.200
