@@ -13,6 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rbcBusinessPaymentsEnabled = process.env.RBC_BUSINESS_PAYMENTS_ENABLED === "true";
 const rbcReconciliationSecret = process.env.RBC_RECONCILIATION_SECRET;
+const rbcBusinessEmail = process.env.RBC_BUSINESS_EMAIL;
 
 type OrderStatus = "awaiting_bank_confirmation" | "confirmed" | "expired" | "refunded" | "renewal_required";
 type PendingOrder = {
@@ -92,7 +93,8 @@ async function startServer() {
       amountCents,
       status: "awaiting_bank_confirmation",
       paymentRequestUrl: null,
-      message: "Order reference created. Complete the RBC Business Request Money flow; access is granted only after verified confirmation.",
+      paymentDestinationEmail: rbcBusinessEmail ?? null,
+      message: "Order reference created. Send the exact CAD amount by RBC business e-transfer to the designated business destination; access is granted only after verified confirmation.",
       nextStep: `Use order reference ${orderReference} in the RBC business payment request.`,
       origin: publicOrigin(req),
     });
